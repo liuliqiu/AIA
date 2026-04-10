@@ -1,0 +1,6 @@
+*.pyc
+chroma_db/
+models/
+config.toml
+*.jsonl
+workspace/
