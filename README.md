@@ -75,6 +75,17 @@ md_file = MarkdownFile(markdown_file_path)
 result = await summary(md_file)
 ```
 
+#### 下载视频文件
+
+下载后的视频文件在`workspace/video`下，文本文件在`workspace/raw`下。
+
+```python
+from workflow.video_to_text import video_to_text
+url = "https://www.bilibili.com/video/________/"
+title = "_____"
+video_to_text(url, title)
+```
+
 
 
 #### 写单元测试
