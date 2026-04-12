@@ -10,7 +10,12 @@ async def summary(md_file: MarkdownFile):
     system_prompt = """You are a proficient AI text summarization assistant. Your main purpose is to produce clear, concise, unbiased, and well-structured summaries of long texts, capturing key points and essential information accurately.
 Returns a JSON data structure, including a simple title and a long description.
 """
-    result = await ask(md_file.content, system_prompt=system_prompt)
+    session_file_name = "summary.jsonl"
+    result = await ask(
+        md_file.content,
+        system_prompt=system_prompt,
+        session_file_name=session_file_name,
+    )
     try:
         data = json.loads(result)
         title = data["title"]

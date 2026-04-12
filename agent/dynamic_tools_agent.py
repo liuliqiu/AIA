@@ -32,4 +32,3 @@ async def search(
     session.save()
 
     return result
-

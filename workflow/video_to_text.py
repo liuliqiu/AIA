@@ -9,6 +9,7 @@ from utils.save_result import save_result
 from utils.md_utils import save_md_file, MarkdownFile
 from pathvalidate import sanitize_filename
 
+
 def video_to_text(url, title):
     config = get_workspace_config()
     video_output = config.video / f"{title}.mp4"
@@ -29,5 +30,3 @@ def save_result(title, metadata, content):
         save_md_file(file, content, metadata)
     except:
         pass
-
-
