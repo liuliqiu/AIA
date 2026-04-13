@@ -17,6 +17,10 @@ class Context:
         result.append(self.new_messages)
         return list(chain(*result))
 
+    def archive_new_messages(self):
+        self.history.extend(self.new_messages)
+        self.new_messages = []
+
     def push_user_message(self, content):
         self.new_messages.append({"role": "user", "content": content})
 

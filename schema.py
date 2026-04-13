@@ -31,6 +31,7 @@ class WorkspaceConfig(BaseModel):
     video: Path = Field(..., description="video path")
     wiki: Path = Field(..., description="wiki path")
     session: Path = Field(..., description="session path")
+    python: Path = Field(..., description="python path")
 
     def __init__(self, **kwargs):
         if "workspace" not in kwargs:
