@@ -9,8 +9,8 @@ from utils.save_result import save_result
 
 async def assistant_select(query):
     try:
-        session_path = f"assistant_session.{datetime.now()}.jsonl"
-        assistant_result = await ask(prompt(query), session_path=session_path)
+        session_file_name = f"assistant_session.{datetime.now()}.jsonl"
+        assistant_result = await ask(prompt(query), session_file_name=session_file_name)
         assistant = json.loads(assistant_result)
     except:
         assistant = {
@@ -27,8 +27,8 @@ async def assistant_select(query):
 
 async def get_vectordb_query(query):
     try:
-        session_path = f"vectordb_session.{datetime.now()}.jsonl"
-        result = await ask(prompt(query), session_path=session_path)
+        session_file_name = f"vectordb_session.{datetime.now()}.jsonl"
+        result = await ask(prompt(query), session_file_name=session_file_name)
         return result
     except:
         return query
@@ -36,7 +36,7 @@ async def get_vectordb_query(query):
 
 async def rag(query, persist_directory="./chroma_db"):
     assistant_type, system_prompt = await assistant_select(query)
-    session_path = f"assistant.{assistant_type}.jsonl"
+    session_file_name = f"assistant.{assistant_type}.jsonl"
 
     vectordb = load_vectordb(persist_directory)
     vectordb_query = await get_vectordb_query(query)
@@ -48,8 +48,8 @@ async def rag(query, persist_directory="./chroma_db"):
     )
 
     result = await search(
-        rag_prompt, system_prompt=system_prompt, session_path=session_path
+        rag_prompt, system_prompt=system_prompt, session_file_name=session_file_name
     )
 
-    save_result(query, session_path, result)
+    save_result(query, session_file_name, result)
     return result

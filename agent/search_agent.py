@@ -1,15 +1,12 @@
+from datetime import datetime
+
 from agent.tools.web import WebFetchTool, WebSearchTool
 from agent.tools_manager import ToolsManager
-from agent.context import Context
-from agent.runner import Agent
-from agent.session import Session
-from llm import LLM
-
-from utils.save_result import save_result
+from agent.custom_agent import CustomAgent
 
 
 async def search(
-    prompt, system_prompt="You are a helpful AI assistant.", session_filename=None
+    prompt, system_prompt="You are a helpful AI assistant.", session_file_name=None
 ):
     tools = ToolsManager(
         [
@@ -18,17 +15,9 @@ async def search(
         ],
         "auto",
     )
-
-    session = Session.load(session_filename)
-    context = Context(system_prompt, session.messages)
-    llm = LLM()
-
-    agent = Agent(llm, context, tools)
-    result = await agent.run(prompt)
-
-    save_result(prompt, session.path, result)
-
-    session.extend_messages(context.new_messages)
-    session.save()
-
-    return result
+    if session_file_name is None:
+        session_file_name = f"search.{datetime.now()}.jsonl"
+    agent = CustomAgent(
+        system_prompt, tools_manager=tools, session_file_name=session_file_name
+    )
+    return await agent.run(prompt)

@@ -4,7 +4,10 @@ from itertools import chain
 class Context:
     def __init__(self, system_prompt: str = "", history: list | None = None):
         self.system_prompt = system_prompt
-        self.history = history
+        if history:
+            self.history = list(history)
+        else:
+            self.history = []
         self.new_messages = []
 
     @property

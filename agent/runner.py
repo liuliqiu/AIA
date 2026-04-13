@@ -1,12 +1,17 @@
 import json
 import asyncio
 
+from agent.tools_manager import ToolsManager
+
 
 class Agent:
-    def __init__(self, llm, context, tools_manager):
+    def __init__(self, llm, context, tools_manager=None):
         self.llm = llm
         self.context = context
-        self.tools_manager = tools_manager
+        if tools_manager is None:
+            self.tools_manager = ToolsManager([], "none")
+        else:
+            self.tools_manager = tools_manager
         self.concurrent_tools = True
 
     async def run(self, prompt: str):
@@ -15,6 +20,7 @@ class Agent:
         # return response.content
 
     async def think(self):
+        print("think ", len(self.context.messages))
         response = await self.llm.ask_tool(
             self.context.messages,
             self.tools_manager.get_definitions(),
