@@ -3,6 +3,7 @@ from agent.tools.file import ReadFileTool
 from agent.tools.shell import ExecuteShellCommand
 from agent.tools_manager import ToolsManager
 from agent.custom_agent import CustomAgent
+from utils.md_utils import MarkdownFile
 from config import get_workspace_config
 
 
@@ -72,27 +73,40 @@ The following skills extend your capabilities. To use a skill, read its SKILL.md
     return skill_prompt_title.format(skills_summary=build_skill_summary(skills))
 
 
+def load_skills(skills_path):
+    skills = []
+    for path in skills_path.iterdir():
+        if path.is_dir():
+            skill_file_path = path / "SKILL.md"
+            if skill_file_path.exists():
+                skill_file = MarkdownFile(skill_file_path)
+                metadata = skill_file.metadata
+                skills.append(
+                    {
+                        "name": path.name,
+                        "description": metadata["description"],
+                        "meta": metadata.get("metadata", {}),
+                        "path": str(skill_file_path),
+                    }
+                )
+
+    return skills
+
+
 async def ask(prompt, session_file_name=None):
     tools = ToolsManager(
         [
             ReadFileTool(),
             ExecuteShellCommand(),
-            # WebFetchTool(),
-            # WebSearchTool(),
+            WebFetchTool(),
+            WebSearchTool(),
         ],
         "auto",
     )
 
     config = get_workspace_config()
 
-    skills = [
-        {
-            "name": "wallstreet-breakfast",
-            "description": """整理和生成每日华尔街见闻早餐财经简报。当用户要求"发一下今天的华尔街见闻早餐"、"今日财经早餐"、"华尔街早餐"或类似请求时使用此技能。生成包含全球市场概览、宏观要闻、行业动态、政策监管、大宗商品、投资策略等内容的专业财经简报。""",
-            "path": "/Users/liqiuliu/code/personal/AIA/workspace/skills/wallstreet-breakfast/SKILL.md",
-            "meta": {},
-        }
-    ]
+    skills = load_skills(config.workspace / "skills")
 
     skill_prompt = build_skill_prompt(skills)
     system_prompt = "\n\n---\n\n".join(
