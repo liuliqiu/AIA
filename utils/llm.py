@@ -2,7 +2,7 @@ from typing import Optional
 
 from loguru import logger
 from openai import AsyncOpenAI
-from schema import LLMConfig
+from utils.schema import LLMConfig
 from config import get_llm_config
 
 

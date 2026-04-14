@@ -1,5 +1,5 @@
 from typing import Optional
-from schema import LLMConfig, LarkConfig, WorkspaceConfig
+from utils.schema import LLMConfig, LarkConfig, WorkspaceConfig
 import tomllib
 
 with open("config.toml", "rb") as f:
