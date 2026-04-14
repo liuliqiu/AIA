@@ -14,6 +14,10 @@ class Agent:
             self.tools_manager = tools_manager
         self.concurrent_tools = True
 
+    @property
+    def tools(self):
+        return self.tools_manager
+
     async def run(self, prompt: str):
         self.context.push_user_message(prompt)
         return await self.think()
@@ -23,8 +27,8 @@ class Agent:
         print("think ", len(self.context.messages))
         response = await self.llm.ask_tool(
             self.context.messages,
-            self.tools_manager.get_definitions(),
-            self.tools_manager.tool_choice,
+            self.tools.get_definitions(),
+            self.tools.tool_choice,
         )
         if response.tool_calls:
             self.context.push_assistant_message(response.content, response.tool_calls)
@@ -54,7 +58,7 @@ class Agent:
         kwargs = json.loads(command.function.arguments or "{}")
         call_id = command.id
         try:
-            result = await self.tools_manager.get(name).execute(
+            result = await self.tools.get(name).execute(
                 call_id=call_id, **kwargs
             )
         except:

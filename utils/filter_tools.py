@@ -4,7 +4,7 @@ from sentence_transformers import SentenceTransformer
 from agent.tools_manager import ToolsManager
 
 
-def filter_tool(tools_manager: ToolsManager, prompt: str, count=5):
+def filter_tools(tools_manager: ToolsManager, prompt: str, count=5):
     sentences = [prompt]
     if len(tools_manager.tools) < count:
         return tools_manager
