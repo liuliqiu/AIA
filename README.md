@@ -26,6 +26,7 @@ verification_token = ""
 
 [workspace]
 workspace = "./workspace/"
+python = ""
 ```
 
 
